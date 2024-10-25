@@ -12,7 +12,7 @@ import { Person } from './types/Person';
 import { DropDown } from './components/DropDown';
 
 export const App: React.FC = () => {
-  const [people, setPeople] = useState<Person[]>(peopleFromServer);
+  const [people] = useState<Person[]>(peopleFromServer);
   const [query, setQuery] = useState('');
   const [appliedQuery, setAppliedQuery] = useState('');
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
@@ -22,6 +22,7 @@ export const App: React.FC = () => {
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
     applyQuery(event.target.value);
+    setSelectedPerson(null);
   };
 
   useEffect(() => {
@@ -49,15 +50,11 @@ export const App: React.FC = () => {
   return (
     <div className="container">
       <main className="section is-flex is-flex-direction-column">
-        {selectedPerson ? (
-          <h1 className="title" data-cy="title">
-            {`${selectedPerson.name} (${selectedPerson.born} - ${selectedPerson.died})`}
-          </h1>
-        ) : (
-          <h1 className="title" data-cy="title">
-            No selected person
-          </h1>
-        )}
+        <h1 className="title" data-cy="title">
+          {selectedPerson
+            ? `${selectedPerson.name} (${selectedPerson.born} - ${selectedPerson.died})`
+            : `No selected person`}
+        </h1>
 
         <div className="dropdown is-active">
           <div className="dropdown-trigger">
@@ -74,7 +71,6 @@ export const App: React.FC = () => {
 
           <DropDown
             visiblePeople={visiblePeople}
-            appliedQuery={appliedQuery}
             onSelected={handleChooseUser}
           />
         </div>
